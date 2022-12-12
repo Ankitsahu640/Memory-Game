@@ -1,6 +1,8 @@
 const moves = document.getElementById("moves-count");
+const star = document.getElementById("star");
 const timeValue = document.getElementById("time");
 const memImg = document.getElementById("memory-img");
+const levelStar = document.getElementById("level-star");
 const levelStats = document.getElementById("level-stats");
 const startButton = document.getElementById("start");
 const stopButton = document.getElementById("stop");
@@ -62,6 +64,9 @@ let seconds = 0,
   str = "00:00";
 //Initial moves and win count
 let movesCount = 0;
+let oneStar = 30;
+let twoStar = 24;
+let threeStar = 15;
 
 //For timer
 const timeGenerator = () => {
@@ -83,6 +88,21 @@ const movesCounter = () => {
   movesCount += 1;
   moves.innerHTML = `<span>Moves:</span>${movesCount}`;
 };
+let winStar="";
+const starChange=()=>{
+  if(movesCount<=oneStar){
+    winStar=`<img src="./img/star.png" class="winstar"/><img src="./img/star_line.png" class="winstar"/><img src="./img/star_line.png" class="winstar"/>`
+    star.innerHTML=`<img src="./img/Vstar.png" class="star-image"/><img src="./img/Vstar_line.png" class="star-image"/><img src="./img/Vstar_line.png" class="star-image"/>`
+    if(movesCount<=twoStar){
+      winStar=`<img src="./img/star.png" class="winstar"/><img src="./img/star.png" class="winstar"/><img src="./img/star_line.png" class="winstar"/>`
+      star.innerHTML=`<img src="./img/Vstar.png" class="star-image"/><img src="./img/Vstar.png" class="star-image"/><img src="./img/Vstar_line.png" class="star-image"/>`
+      if(movesCount<=threeStar){
+        winStar=`<img src="./img/star.png" class="winstar"/><img src="./img/star.png" class="winstar"/><img src="./img/star.png" class="winstar"/>`
+        star.innerHTML=`<img src="./img/Vstar.png" class="star-image"/><img src="./img/Vstar.png" class="star-image"/><img src="./img/Vstar.png" class="star-image"/>`
+      }
+    }
+  }
+}
 
 //Pick random objects from the items array
 const generateRandom = (row,col) => {
@@ -108,12 +128,6 @@ const matrixGenerator = (cardValues,row,col) => {
   //simple shuffle
   cardValues.sort(() => Math.random() - 0.5);
   for (let i = 0; i < row * col; i++) {
-    /*
-        Create Cards
-        before => front side (contains question mark)
-        after => back side (contains actual image);
-        data-card-values is a custom attribute which stores the names of the cards to match later
-      */
     gameContainer.innerHTML += `
      <div class="card-container" data-card-value="${cardValues[i].name}" onclick="playbeep()">
         <div class="card-before"></div>
@@ -143,6 +157,7 @@ const matrixGenerator = (cardValues,row,col) => {
               } else{
                     //increment moves since user selected second card
                     movesCounter();
+                    starChange();
                     //secondCard and value
                     secondCard = card;
                     let secondCardValue = card.getAttribute("data-card-value");
@@ -168,7 +183,7 @@ const matrixGenerator = (cardValues,row,col) => {
                             level.classList.add("hide");
                             play.classList.remove("hide");
                             menu.classList.remove("hide");
-                            result.innerHTML = `<h2> You Win </h2>
+                            result.innerHTML = `<h2> You Won <div class="win-star">${winStar}</div></h2> 
                                               <h3>Moves: ${movesCount}</h3>
                                               <h3>Time Taken: ${str}</h3>`;
                             controls.classList.remove("hide");
@@ -176,6 +191,21 @@ const matrixGenerator = (cardValues,row,col) => {
                             clearInterval(interval);
                         }
                       }  
+                      else if(movesCount>oneStar){
+                          startButton.classList.add("hide");
+                          memImg.classList.add("hide");
+                          about.classList.add("hide");
+                          music.classList.add("hide");
+                          level.classList.add("hide");
+                          play.classList.remove("hide");
+                          menu.classList.remove("hide");
+                          result.innerHTML = `<h2> Game Over <div class="lost">You Lost</div></h2>
+                                            <h3>Moves: ${movesCount}</h3>
+                                            <h3>Time Taken: ${str}</h3>`;
+                          controls.classList.remove("hide");
+                          stopButton.classList.add("hide");
+                          clearInterval(interval);
+                      }
                       else if((levelContainer.getAttribute("value")=="Easy")||(levelContainer.getAttribute("value")=="Medium")){
                           //if the cards dont match
                           //flip the cards back to normal
@@ -227,6 +257,7 @@ startButton.addEventListener("click",startGame= () => {
   movesCount = 0;
   seconds = 0;
   minutes = 0;
+  starChange();
   //controls amd buttons visibility
   controls.classList.add("hide");
   stopButton.classList.remove("hide");
@@ -330,49 +361,61 @@ if (mq.matches) {
       easy.addEventListener("click",()=>{
         row=4;
         col=4;
+        oneStar = 30;
+        twoStar = 24;
+        threeStar = 15;
         controls.classList.remove("hide");
         levelContainer.classList.add("hide");
         wrapper.classList.remove("hide");
         wrapper.style.width="27em";
         level.innerHTML=`Level: <span id="level-value">easy</span>`;
         levelContainer.setAttribute("value","Easy");
-        levelStats.style.left = "-12.7em";
+        levelStar.style.left = "-8.7em";
       })
 
       medium.addEventListener("click",()=>{
         row=6;
         col=4;
+        oneStar = 40;
+        twoStar = 30;
+        threeStar = 22;
         controls.classList.remove("hide");
         levelContainer.classList.add("hide");
         wrapper.classList.remove("hide");
         wrapper.style.width="27em";
         level.innerHTML=`Level: <span id="level-value">medium</span>`;
         levelContainer.setAttribute("value","Medium");
-        levelStats.style.left = "-11.5em";
+        levelStar.style.left = "-6.5em";
       })
 
       difficult.addEventListener("click",()=>{
         row=4;
         col=4;
+        oneStar = 40;
+        twoStar = 30;
+        threeStar = 22;
         controls.classList.remove("hide");
         levelContainer.classList.add("hide");
         wrapper.classList.remove("hide");
         wrapper.style.width="27em";
         level.innerHTML=`Level: <span id="level-value">difficult</span>`;
         levelContainer.setAttribute("value","Difficult");
-        levelStats.style.left = "-11.2em";
+        levelStar.style.left = "-7.2em";
       })
       
       impossible.addEventListener("click",()=>{
         row=6;
         col=4;
+        oneStar = 55;
+        twoStar = 40;
+        threeStar = 30;
         controls.classList.remove("hide");
         levelContainer.classList.add("hide");
         wrapper.classList.remove("hide");
         wrapper.style.width="27em";
         level.innerHTML=`Level: <span id="level-value">impossible</span>`;
         levelContainer.setAttribute("value","Impossible");
-        levelStats.style.left = "-10.5em";
+        levelStar.style.left = "-4.5em";
       })
     })
 }
@@ -386,49 +429,61 @@ else{
         easy.addEventListener("click",()=>{
           row=4;
           col=4;
+          oneStar = 30;
+          twoStar = 24;
+          threeStar = 15;
           controls.classList.remove("hide");
           levelContainer.classList.add("hide");
           wrapper.classList.remove("hide");
           wrapper.style.width="27em";
           level.innerHTML=`Level: <span id="level-value">easy</span>`;
           levelContainer.setAttribute("value","Easy");
-          levelStats.style.left = "-12.7em";
+          levelStar.style.left = "-8.7em";
         })
   
         medium.addEventListener("click",()=>{
           row=4;
           col=6;
+          oneStar = 40;
+          twoStar = 30;
+          threeStar = 22;
           controls.classList.remove("hide");
           levelContainer.classList.add("hide");
           wrapper.classList.remove("hide");
           wrapper.style.width="40em";
           level.innerHTML=`Level: <span id="level-value">medium</span>`;
           levelContainer.setAttribute("value","Medium");
-          levelStats.style.left = "-21.5em";
+          levelStar.style.left = "-19.5em";
         })
   
         difficult.addEventListener("click",()=>{
           row=4;
           col=4;
+          oneStar = 40;
+          twoStar = 30;
+          threeStar = 22;
           controls.classList.remove("hide");
           levelContainer.classList.add("hide");
           wrapper.classList.remove("hide");
           wrapper.style.width="27em";
           level.innerHTML=`Level: <span id="level-value">difficult</span>`;
           levelContainer.setAttribute("value","Difficult");
-          levelStats.style.left = "-11.3em";
+          levelStar.style.left = "-7.3em";
         })
         
         impossible.addEventListener("click",()=>{
           row=4;
           col=6;
+          oneStar = 55;
+          twoStar = 40;
+          threeStar = 30;
           controls.classList.remove("hide");
           levelContainer.classList.add("hide");
           wrapper.classList.remove("hide");
           wrapper.style.width="40em";
           level.innerHTML=`Level: <span id="level-value">impossible</span>`;
           levelContainer.setAttribute("value","Impossible");
-          levelStats.style.left = "-20em";
+          levelStar.style.left = "-18em";
         })
       })
 }
