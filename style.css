@@ -33,12 +33,31 @@
   .stats-container span {
     font-weight: 600;
   }
-  #level-stats{
-     font-size:1.2em;
+  #level-star{
      position: relative;
-     left:-12.7em;
-     top:0.8em;
+     left:-8.7em;
+     top: 0.8em;
+     gap: 0.5em;
+     display: inline-flex;
   }
+  #level-stats{
+    font-size: 1.3em;
+  }
+  .star-image{
+    width:1.8rem;
+  }
+  .winstar{
+    width:4rem;
+    margin-top: -1rem;
+    margin-bottom: 1rem;
+    filter:drop-shadow(2px 2px 2px rgb(75, 74, 74));
+  }
+  .lost{
+    font-size: 3.5rem;
+    margin-top: -1rem;
+    margin-bottom: 1rem;
+  }
+  
   .card-container {
     position: relative;
     width: 6.25em;
@@ -87,6 +106,7 @@
     background: linear-gradient(45deg,#ff928b, #ff8c81);
     top: 0;
   }
+  
   #memory-img{
     width:25em;
     top: -2em;
@@ -121,11 +141,13 @@
     text-align: center;
     font-family: Georgia, 'Times New Roman', Times, serif;
     color: #160142;
+    text-shadow: 1.5px 1.5px #fafafd;
     font-weight: 800;
-    text-shadow: 0 0 3px #fefefe, 0 0 5px #f7f7fa;
+    /* text-shadow: 0 0 3px #fefefe, 0 0 5px #f7f7fa; */
   }
   #result h2 {
     font-size: 4.5em;
+    text-shadow: 2px 2.6px #fafafd;
   }
   #result h3 {
     font-size: 2.3em;
